@@ -184,7 +184,34 @@ Notice we drop the normalization term for $\tilde{p}$. Then $q(\theta) = p(\thet
 w_s = \frac{\tilde{p}(\theta_s)/{q}(\theta_s)}{\sum_{s'} \tilde{p}(\theta_s)/{q}(\theta_s)} =\frac{p(Data| \theta_s)}{\sum_{s'} p(Data|\theta_{s'}) }
 \]
 
-In summary, we run importance sampling to compute the posterior of the parameters by sampling different parameters from the priors and then by assigning weights to each of those different parameters based on likelihood in the data. The resulting samples are unbisased samples from the distribution of interest. 
+In summary, we run importance sampling to compute the posterior of the parameters by sampling different parameters from the priors and then by assigning weights to each of those different parameters based on likelihood in the data. The resulting samples are unbiased samples from the distribution of interest. 
+
+\begin{exercise}
+Importance sampling can be thought of as a form of variance reduction, where we are estimating $\mu = \mathbb{E}_p[f(z)]$ with
+\[ \mu_q = \frac{1}{S} \sum_{i=1}^S\frac{p(z^s)}{q(z^s)}f(z^s), \qquad z^s \sim q \]
+We hope that by choosing a ``good'' $q$, we will have $\Var[\mu_q] < \Var[\mu]$.  Here we will compute this variance reduction and thus find what a ``good'' $q$ means.
+\begin{enumerate}
+\item Show that the importance-sampled variance is given by
+\[ \Var[\mu_q] = \int \frac{(f(z)p(z) - \mu q(z))^2}{q(z)} dz \]
+\item What choice of $q(z)$ will minimize this variance?  With this choice, how many samples do you need to converge?
+\item Why is this choice not practical (i.e.~implementable)?
+\end{enumerate}
+
+\textit{Solution}
+\begin{enumerate}
+\item From the definition of variance we have
+\begin{align*}
+\Var[\mu_q] &= \int \frac{(f(z)p(z))^2}{q^2(z)} q(z)dz - \mu^2 \\
+			&= \int \frac{(f(z)p(z))^2}{q(z)} dz - \mu^2 \\
+			&= \int \frac{(f(z)p(z) - \mu q(z))^2}{q(z)} dz \\
+\end{align*}
+The extra factor of $q(z)$ in the first line comes from the fact that $z^s \sim q$.
+
+\item The variance goes to zero if $q(z) = f(z)p(z)/\mu$.  With zero variance, every sample has the mean value, thus only one sample is needed.
+\item We must be able to sample from $q(z) = f(z)p(z)/\mu$; however, this implies that we know the normalization $\mu$.  But that's exactly what we're trying to find! So our best bet is to sample from a distribution similar to $f(z)p(z)/\mu$ as possible.
+\end{enumerate}
+
+\end{exercise}
 
 
 \subsection{Particle Filtering/Sequential Monte Carlo}
@@ -210,5 +237,8 @@ Using this expression, we have the following algorithm to approximate the belief
 1. Start with particles $(w_t,z_t)^{(s)}$. \\
 2. At each time step $t$ for particle $x$, calculate $w_t^s = \frac{p(x_t|z_t)p(z_t|z_{t-1})}{q(z_t|z_{1:t-1},y_{1:t})}w_{t-1}^s$ and sample $z_t^s \sim q(z_t|z^s_{1:t-1},x_t)$. \\
 3. Compute $p(z_t,x_{1:t})$
+
+\section*{References}
+Owen, Art, \textit{Importance Sampling}, 2013, \url{https://statweb.stanford.edu/~owen/mc/Ch-var-is.pdf}
 
 \end{document}
