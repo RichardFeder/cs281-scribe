@@ -141,14 +141,14 @@ Suppose we observed $x_{1:T}$ and we want to infer $z_t$. We can use another var
 
 
 \subsubsection{Basic Idea}
-We aim to sample form $p$ to approximate $f(z)$ using MonteCarlo sampling:
+We aim to sample from $p$ to approximate $f(z)$ using Monte Carlo sampling:
 \begin{center}
 \includegraphics[scale=0.5]{normal_dist.png}
 \end{center}
 
 To approximate integrals of the form:
 \[ \mathbb{E}_p[f(z)] = \int q(z) \frac{p(z)}{q(z)}f(z)dz \approx \frac{1}{S} \sum_{i=1}^S\frac{p(z^s)}{q(z^s)}f(z^s) = \sum_{i=1}^Sw^sf(z^s)\]
-$w^s = \frac{p(z^s)}{q(z^s)}$ are importance weights associated with each sample.
+$w^s = \frac{p(z^s)}{q(z^s)}$ are importance weights associated with each sample $z^s$, where $z^s \sim q$, our importance distribution.
 
 \subsubsection{Unnormalized Distributions}
 Frequently will have unnormalized target distribution $\tilde{p}(z)$ but not its normalization constant $Z_p$. Similarly, may have unnormalized proposal $\tilde{q}(z)$ and its unknown normalization constant $Z_q$.
@@ -162,7 +162,7 @@ Now, how to compute $\frac{Z_q}{Z_p}$? Can also importance sample from $q$.
 Substituting the sampled $\frac{Z_p}{Z_q}$ back:
 \[\mathbb{E}_p[f(z)] \approx \sum_{s=1}^S \frac{\tilde{w}^s}{\sum_{s'}\tilde{w}^{s'}}f(z^s) = \sum_{s=1}^S w^s f(z^s)\]
 
-\textbf{Note}: This form of importance sampling is convenient as it lets us work with unnormalized distributions. However, in many cases is much less convenient than, for instance, rejection sampling or MonterCarlo sampling because it is not fully clear how to use the weights. 
+\textbf{Note}: This form of importance sampling is convenient as it lets us work with unnormalized distributions. However, in many cases is much less convenient than, for instance, rejection sampling or Monte Carlo sampling because it is not fully clear how to use the weights. 
 
 
 Now consider getting samples from $p$. We need to define $p(x)$ in terms of $\mathbb{E}_p[f(x)]$ using a $\delta$ function that returns $1$ if it's the value we want, $0$ otherwise:
@@ -179,12 +179,12 @@ But we actually want unweighted samples, which can be obtained through \textbf{r
     \tilde{p}(\theta | Data) &= p(Data|\theta)p(\theta) \\
 \end{align*}
 
-Notice we drop the normalization term for $\tilde{p}$. Then $q(\theta) = p(\theta)$, which implies that we importance-sample based on the prior. This gives normalized $w_s$:
+Notice we drop the normalization term for $\tilde{p}$. Then $q(\theta) = p(\theta)$, which implies that we importance sample based on the prior. This gives normalized $w_s$:
 \[
 w_s = \frac{\tilde{p}(\theta_s)/{q}(\theta_s)}{\sum_{s'} \tilde{p}(\theta_s)/{q}(\theta_s)} =\frac{p(Data| \theta_s)}{\sum_{s'} p(Data|\theta_{s'}) }
 \]
 
-In summary, we run importance-sampling to compute the posterior of the parameters by sampling different parameters from the priors and then by assigning weights to each of those different parameters based on likelihood in the data. The resulting samples are unbisased samples from the distribution of interest. 
+In summary, we run importance sampling to compute the posterior of the parameters by sampling different parameters from the priors and then by assigning weights to each of those different parameters based on likelihood in the data. The resulting samples are unbisased samples from the distribution of interest. 
 
 
 \subsection{Particle Filtering/Sequential Monte Carlo}
