@@ -208,7 +208,7 @@ We hope that by choosing a ``good'' $q$, we will have $\Var[\mu_q] < \Var[\mu]$.
 The extra factor of $q(z)$ in the first line comes from the fact that $z^s \sim q$.
 
 \item The variance goes to zero if $q(z) = f(z)p(z)/\mu$.  With zero variance, every sample has the mean value, thus only one sample is needed.
-\item We must be able to sample from $q(z) = f(z)p(z)/\mu$; however, this implies that we know the normalization $\mu$.  But that's exactly what we're trying to find! So our best bet is to sample from a distribution similar to $f(z)p(z)/\mu$ as possible.
+\item We must be able to sample from $q(z) \sim f(z)p(z)$; however, this implies that we can sample from $f(z)p(z)$ efficiently.  But if we could, we wouldn't need to do importance sampling in the first place! So our best bet is to sample from a distribution similar to $f(z)p(z)$ as possible.
 \end{enumerate}
 
 \end{exercise}
